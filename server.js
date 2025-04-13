@@ -8,10 +8,11 @@ app.use(express.json());
 
 // Local MySQL connection config
 // triggering azure deployment
+
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'avanti',
+  host: 'assignmentdemo2.mysql.database.azure.com',
+  user: 'mysql_admin',
+  password: 'Dharani@6122', // Use environment variable for sensitive information
   database: 'studentdb',
   port: 3306,
 });
@@ -29,4 +30,4 @@ app.get('/api/students', (req, res) => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log('Backend running on http://localhost:${PORT}'));
