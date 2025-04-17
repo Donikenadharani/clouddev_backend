@@ -6,28 +6,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Local MySQL connection config
-// triggering azure deployment
-
+// MySQL connection configuration
 const db = mysql.createConnection({
-  host: 'assignmentdemo2.mysql.database.azure.com',
+  host: 'myassignment.mysql.database.azure.com',
   user: 'mysql_admin',
-  password: 'Dharani@6122', // Use environment variable for sensitive information
+  password: 'Dharani@6122',
   database: 'studentdb',
   port: 3306,
+  ssl: {
+    rejectUnauthorized: true
+  }
 });
 
+// Connect to the database
 db.connect(err => {
-  if (err) throw err;
+  if (err) {
+    console.error('Database connection failed:', err.stack);
+    return;
+  }
   console.log('Connected to MySQL database');
 });
 
+// Route to get all student details
 app.get('/api/students', (req, res) => {
-  db.query('SELECT * FROM students', (err, results) => {
-    if (err) return res.status(500).send(err);
+  const query = 'SELECT * FROM students';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching student data:', err);
+      return res.status(500).send('An error occurred while retrieving student data.');
+    }
     res.json(results);
   });
 });
-
-const PORT = 3001;
-app.listen(PORT, () => console.log('Backend running on http://localhost:${PORT}'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}/api/students`);
+});
