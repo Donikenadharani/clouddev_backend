@@ -21,11 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-     - name: 'Deploy to Azure Web App'
-  id: deploy-to-webapp
-  uses: azure/webapps-deploy@v3
-  with:
-    app-name: 'assignmentbackend'
-    slot-name: 'Production'
-    package: .
+      - name: Build (Optional)
+        run: npm run build # Only include this if your backend has a build step
 
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'assignmentbackend'
+          slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
